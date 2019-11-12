@@ -27,7 +27,8 @@ class UserTest extends TestCase
     {
         $user = factory(User::class)->create();
         $form['password'] = 'senha';
-        $response = $this->json('POST', route('password', $user->remember_token), $form);
+        $response = $this->json('POST', route('password', $user->remember_token), $form)
+            ->assertStatus(201);
     }
     /** @test */
     public function index_return_users()
