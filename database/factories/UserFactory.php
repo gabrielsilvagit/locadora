@@ -24,7 +24,6 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => bcrypt('password'),
         'address' => $faker->address,
         'city' => $faker->city,
         'state' => $faker->state,
@@ -32,6 +31,7 @@ $factory->define(User::class, function (Faker $faker) {
         'cpf' => $person->cpf(true),
         'dob' => $faker->date($format = 'd-m-Y', $max = '-18 years'),
         'cnh' => $person->rg(true),
-        'admin' => $faker->boolean($chanceOfGettingTrue = 50)
+        'admin' => $faker->boolean($chanceOfGettingTrue = 50),
+        'remember_token' => Str::random(64)
     ];
 });

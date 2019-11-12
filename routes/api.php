@@ -13,5 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-    Route::post('/users', 'UserController@store');
+Route::get('/users', 'UserController@index');
+Route::post('/users', 'UserController@store');
+Route::put('/users/{user}', 'UserController@update');
+Route::delete('/users/{user}', 'UserController@destroy');
 
+Route::post('/password/{token}', 'PasswordController@create')->name('password');
+
+Route::post("/teste", "PasswordController@teste");
