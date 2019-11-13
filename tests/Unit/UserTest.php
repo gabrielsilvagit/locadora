@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\User;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 use App\Notifications\PasswordNotification;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
@@ -15,10 +16,10 @@ class UserTest extends TestCase
     /** @test */
     public function send_email_to_register_password()
     {
-        $this->withoutExceptionHandling();
-		$user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $token = Str::random(64);
 		Notification::fake();
-		Notification::send($user, new PasswordNotification('teste'));
+		Notification::send($user, new PasswordNotification($token));
 		Notification::assertSentTo($user, PasswordNotification::class);
     }
 }

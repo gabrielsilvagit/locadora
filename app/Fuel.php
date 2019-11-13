@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Fuel extends Model
 {
     protected $fillable = [
-        'name', 'price_extra'
+        'name', 'price'
     ];
 
     public function vehicle()

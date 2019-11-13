@@ -40,7 +40,7 @@ class PasswordNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $link = '/password/{token}'.$this->token;
+        $link = '/password/'.$this->token;
         return (new MailMessage)
                     ->line('Registre a senha da sua conta.')
                     ->line('Se em até 24horas sua senha não for registrada,')

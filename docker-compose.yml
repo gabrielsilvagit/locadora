@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  gab-db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    user: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: gabriel
+      MYSQL_USER: root
+      MYSQL_PASSWORD: gabriel
+      MYSQL_DATABASE: gabriel
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./docker/Volumes/mysql:/var/lib/mysql
+      - ./docker/Volumes/conf:/etc/mysql/conf.d

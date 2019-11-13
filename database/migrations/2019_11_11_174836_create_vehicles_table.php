@@ -23,7 +23,7 @@ class CreateVehiclesTable extends Migration
             $table->date('model_year');
             $table->date('make_year');
 
-            $table->foreign('carmodel_id')->references('id')->on('carmodels');
+            $table->foreign('carmodel_id')->references('id')->on('car_models');
             $table->foreign('fuel_id')->references('id')->on('fuels');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
