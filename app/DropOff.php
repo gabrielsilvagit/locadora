@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DropOff extends Model
 {
     protected $fillable = [
-        'end_date', 'damage', 'damage_notes', 'clean', 'clean_notes', 'fuel_level', 'current_km', 'rental_id'
+        'damage', 'damage_notes', 'clean', 'clean_notes', 'fuel_level', 'current_km', 'rental_id'
     ];
 
     public function rental()

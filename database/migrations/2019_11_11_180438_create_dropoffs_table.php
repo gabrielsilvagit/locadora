@@ -13,7 +13,7 @@ class CreateDropoffsTable extends Migration
      */
     public function up()
     {
-        Schema::create('dropoffs', function (Blueprint $table) {
+        Schema::create('drop_offs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->boolean('damage');
             $table->string('damage_notes');
@@ -35,6 +35,6 @@ class CreateDropoffsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dropoffs');
+        Schema::dropIfExists('drop_offs');
     }
 }

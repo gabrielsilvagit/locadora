@@ -47,5 +47,22 @@ use Illuminate\Http\Request;
     Route::post('/vehicles', 'VehicleController@store');
     Route::put('/vehicles/{vehicle}', 'VehicleController@update');
     Route::delete('/vehicles/{vehicle}', 'VehicleController@destroy');
+
+    Route::get('/rentals', 'RentalController@index');
+    Route::post('/rentals', 'RentalController@store');
+    Route::put('/rentals/{rental}', 'RentalController@update');
+    Route::delete('/rentals/{rental}', 'RentalController@destroy');
+
+    Route::get('/dropoffs', 'DropOffController@index');
+    Route::post('/dropoffs', 'DropOffController@store');
+    Route::put('/dropoffs/{dropoff}', 'DropOffController@update');
+    Route::delete('/dropoffs/{dropoff}', 'DropOffController@destroy');
+
+    Route::get('/settings', 'SettingController@index');
+    Route::post('/settings', 'SettingController@store');
+    Route::put('/settings/{setting}', 'SettingController@update');
+    Route::delete('/settings/{setting}', 'SettingController@destroy');
+
+    Route::get('/reports/{dropoff}', 'ReportController@show');
 // });
 

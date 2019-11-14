@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Rental extends Model
 {
     protected $fillable = [
-        'type', 'user_id', 'vehicle_id', 'start_date', 'end_date', 'daily_rate', 'observation', 'current_km', 'ilimited', 'dropoff_id'
+        'type', 'user_id', 'vehicle_id', 'start_date', 'end_date', 'daily_rate', 'notes', 'current_km', 'fuel_level', 'limited'
     ];
 
     public function user()
@@ -22,6 +22,6 @@ class Rental extends Model
 
     public function dropoff()
     {
-        return $this->hasOne("App\DropOff", "id", "dropoff_id");
+        return $this->hasOne("App\DropOff");
     }
 }
