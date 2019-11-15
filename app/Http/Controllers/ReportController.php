@@ -15,18 +15,20 @@ class ReportController extends Controller
     public function show(DropOff $dropoff)
     {
         $report=[];
-        $report['daily_price'];
-        $report['total'];
-        $report['fuel_price'];
-        $report['km_price'];
+        $report['daily_price'] = null;
+        $report['total'] = null;
+        $report['fuel_price'] = null;
+        $report['km_price'] = null;
+        
         try{
             $rental= Rental::where('id', '=', $dropoff->rental_id)->first();
             $user = User::where('id', '=', $rental->user_id)->first();
             $vehicle = Vehicle::where('id', '=', $rental->vehicle_id)->first();
             $category = Category::where('id', '=', $vehicle->category_id)->first();
             $fuel = Fuel::where('id', '=', $vehicle->fuel_id)->first();
-            $daily=($dropoff->created_at - $rental->start_date);
-
+            // dd($dropoff->created_at); // rental start date tem tipo de data diferente
+            // $daily=($dropoff->created_at - $rental->start_date);
+            $daily =5;
             if(!$rental->limited){
                 $report['daily_price']= ($category->free_daily_rate * $daily);
                 $report['km_price']= null;
