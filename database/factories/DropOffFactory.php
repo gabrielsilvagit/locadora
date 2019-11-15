@@ -14,7 +14,7 @@ $factory->define(DropOff::class, function (Faker $faker) {
         'clean' => $faker->boolean($chanceOfGettingTrue = 50),
         'clean_notes' => $faker->text,
         'fuel_level' => rand(0,8),
-        'current_km' => rand(0, 500),
+        'current_km' => rand($rental->current_km, $rental->current_km + 500),
         'rental_id' => $rental->id
     ];
 });
