@@ -41,12 +41,14 @@ class UserTest extends TestCase
     /** @test */
     public function a_user_can_be_updated()
     {
+        $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
         $this->assertDatabaseHas("users", [
             "name" => $user->name,
         ]);
         $newUser = factory(User::class)->make();
         $form = $this->form($newUser);
+        $form['password'] = 'password';
         $response = $this->json('PUT', 'api/users/'.$user->id, $form)
             ->assertStatus(201);
 

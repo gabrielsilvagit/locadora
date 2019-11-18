@@ -14,8 +14,9 @@ class ReportTest extends TestCase
     /** @test */
     public function show_report()
     {
+        $this->withoutExceptionHandling();
         $dropoff = factory(DropOff::class)->create();
         $this->json('GET', 'api/reports/'.$dropoff->id)
-            ->assertStatus(200);
+            ->assertStatus(201);
     }
 }

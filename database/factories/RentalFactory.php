@@ -5,6 +5,7 @@
 use App\User;
 use App\Rental;
 use App\Vehicle;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(Rental::class, function (Faker $faker) {
@@ -16,8 +17,8 @@ $factory->define(Rental::class, function (Faker $faker) {
         'type' => $type_array[0],
         'user_id' => $user->id,
         'vehicle_id' => $vehicle->id,
-        'start_date' => now()->subDays(10),
-        'end_date' => now()->subDays(5),
+        'start_date' => Carbon::today()->subDays(10),
+        'end_date' => Carbon::today()->subDays(5),
         'daily_rate' => rand(0,500),
         'notes' => $faker->text,
         'current_km' => rand(0,1000000),

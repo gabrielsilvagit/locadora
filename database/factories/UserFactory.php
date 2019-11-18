@@ -31,7 +31,7 @@ $factory->define(User::class, function (Faker $faker) {
         'cpf' => $person->cpf(true),
         'dob' => $faker->date($format = 'd-m-Y', $max = '-18 years'),
         'cnh' => $person->rg(true),
-        'admin' => false,
+        'admin' => true,
         'remember_token' => Str::random(64)
     ];
 });

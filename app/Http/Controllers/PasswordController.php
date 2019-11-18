@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Exception;
+use Illuminate\Support\Str;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class PasswordController extends Controller
             $data= Hash::make($password['password']);
             $user = User::where("remember_token", $token)->first();
             $user->password = $data;
+            $user->remember_token = Str::random(64); // user receive a new token
             $user->save();
             return $this->successResponse($user, 201);
         } catch(Exception $e) {

@@ -24,7 +24,6 @@ class RentalTest extends TestCase
     /** @test */
     public function a_rental_can_be_created()
     {
-        $this->withoutExceptionHandling();
         $rental = factory(Rental::class)->make();
         $form = $this->form($rental);
         $response = $this->json('POST', 'api/rentals', $form)
@@ -32,6 +31,24 @@ class RentalTest extends TestCase
         $this->assertDatabaseHas("rentals", [
             "user_id" => $rental->user_id,
             "vehicle_id" => $rental->vehicle_id
+        ]);
+    }
+    /** @test */
+    public function a_rental_cannot_be_created_if_car_unvailable()
+    {
+        $rental = factory(Rental::class)->create();
+        $newRental = factory(Rental::class)->make([
+            'start_date' => $rental->start_date,
+            'end_date' => $rental->end_date,
+            'vehicle_id' => $rental->vehicle_id
+        ]);
+
+        $form = $this->form($newRental);
+        $response = $this->json('POST', 'api/rentals', $form)
+            ->assertStatus(400);
+        $this->assertDatabaseMissing("rentals", [
+            "user_id" => $newRental->user_id,
+            "vehicle_id" => $newRental->vehicle_id
         ]);
     }
     /** @test */

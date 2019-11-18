@@ -26,6 +26,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => 'required',
+            'password' => 'sometimes|required',
             'address' => 'required',
             'city' => 'required',
             'state' => 'required',

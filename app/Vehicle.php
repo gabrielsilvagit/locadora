@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle extends Model
 {
     protected $fillable = [
-        'plate', 'chassi', 'carmodel_id', 'model_year', 'make_year', 'fuel_id', 'category_id'
+        'plate', 'chassi', 'carmodel_id', 'model_year', 'make_year', 'fuel_id', 'category_id',
     ];
 
     public function rental()

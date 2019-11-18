@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Rental;
 use App\DropOff;
+use App\Vehicle;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Http\Requests\DropOffRequest;
@@ -26,6 +28,13 @@ class DropOffController extends Controller
     {
         try {
             $dropoff = DropOff::create($request->all());
+
+            $db_dropoff = DropOff::where('id','=',$dropoff->id)->first();
+            $rental = Rental::where('id','=',$dropoff->rental_id)->first();
+            $end_date=$db_dropoff->created_at;
+            $rental->end_date=$end_date;
+            $rental->save();
+
             return $this->successResponse($dropoff, 201);
         } catch (Exception $e) {
             return $this->errorResponse('Error', 400);

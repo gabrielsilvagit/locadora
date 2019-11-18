@@ -20,45 +20,35 @@ class UserController extends Controller
     use ApiResponser;
     public function index()
     {
-        try{
-            $users = User::all();
-            return $this->successResponse($users);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $users = User::all();
+        return $this->successResponse($users);
     }
     public function store(UserRequest $request)
     {
-        try {
-            $token = Str::random(64);
-            $user = User::create($request->all());
-            $user->remember_token = $token;
-            $user->save();
-            Notification::send($user, new PasswordNotification($token));
-            return $this->successResponse($user, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $token = Str::random(64); // email token for password request
+
+        $user = User::create($request->all());
+        $user->remember_token = $token;
+        $user->save();
+
+        Notification::send($user, new PasswordNotification($token)); // send email to user with password token
+
+        return $this->successResponse($user, 201);
     }
 
     public function update(UserRequest $request, User $user)
     {
-        try{
-            $user->update($request->all());
-            return $this->successResponse($user, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $password=$request->all(['password']);
+        // $request->all() = Hash::make($password);
+        dd($request->all(['password']));
+        $user->update($request->all());
+        return $this->successResponse($user, 201);
     }
 
     public function destroy(User $user)
     {
-        try {
-            $user->delete();
-            return $this->successResponse($user);
-        } catch (Exceptio $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $user->delete();
+        return $this->successResponse($user);
     }
 
 }
