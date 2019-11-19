@@ -4,22 +4,39 @@ namespace App\Services;
 
 use App\Rental;
 use App\Vehicle;
+use App\Category;
 use Carbon\Carbon;
 
 class AvailabilityService {
-    public function available($newRental)
+
+    public function available($category_id, $start, $end)
     {
-        $start = Carbon::parse($newRental['start_date']);
-        $end = Carbon::parse($newRental['end_date']);
-        $vehicle = Vehicle::where('id','=',$newRental['vehicle_id'])->first();
+        $start = Carbon::parse($start);
+        $end = Carbon::parse($end);
+        $unavailable = Rental::where('category_id','=',$category_id)
+            // ->where(function($q1) use($start, $end) {
+            //     return $q1->where($start, "<", "start_date")->where($end, ">", "end_date");
+            // })
+            // ->orWhere(function($q2)  use($start, $end) {
+            //     return $q2->where($start, "<", "start_date")->where($end, "<", "end_date")->where($end,'>',"start_date");
+            // })
+            // ->orWhere(function($q3)  use($start, $end) {
+            //     return $q3->where($start, ">", "start_date")->where($end, ">", "end_date")->where($start,'<',"end_date");
+            // })
+            // ->where(function($q4)  use($start, $end) {
+            //     return $q4->where($start, ">", "start_date")->where($end, "<", "end_date");
+            // })
+            ->where(function($q4)  use($start, $end) {
+                return $q4->where("start_date", Carbon::parse($start)->format("Y-m-d"))->where("end_date", Carbon::parse($end)->format("Y-m-d"));
+            })
+            ->count();
+        $total = Vehicle::where('category_id','=',$category_id)->count();
 
-        $rentals = Rental::where('vehicle_id','=',$vehicle->id)->get();
+        dd($unavailable,$total, Carbon::parse($start)->format("Y-m-d"), $end);
 
-        foreach($rentals as $rental){
-            if(!$rental->start>$end || $rental->end<$start){
-                return false;
-            }
+        if ($total >= $unavailable) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

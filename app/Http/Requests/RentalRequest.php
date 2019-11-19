@@ -25,8 +25,8 @@ class RentalRequest extends FormRequest
     {
         return [
             'type' => 'required',
-            'user_id' => 'required',
-            'vehicle_id' => 'required',
+            'user_id' => 'required|exists:users,id',
+            'category_id' => 'required|exists:categories,id',
             'start_date' => 'required',
             'end_date' => 'required',
             'daily_rate' => 'required',

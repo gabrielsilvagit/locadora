@@ -18,6 +18,15 @@ class SettingTest extends TestCase
         $this->json('GET', 'api/settings')
             ->assertStatus(200);
     }
+
+    /** @test */
+    public function show_return_setting()
+    {
+        $setting = factory(Setting::class)->create();
+        $this->json('GET', 'api/setting/'.$setting->id)
+            ->assertStatus(200);
+    }
+
     /** @test */
     public function a_setting_can_be_created()
     {

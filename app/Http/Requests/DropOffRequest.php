@@ -30,7 +30,7 @@ class DropOffRequest extends FormRequest
             'clean_notes' => 'required',
             'fuel_level' => 'required',
             'current_km' => 'required',
-            'rental_id' => 'required'
+            'rental_id' => 'required|exists:rentals,id'
         ];
     }
 }

@@ -31,6 +31,12 @@ class FuelController extends Controller
             return $this->errorResponse('Error', 400);
         }
     }
+
+    public function show(Fuel $fuel)
+    {
+        return $this->successResponse($fuel);
+    }
+
     public function update(FuelRequest $request, Fuel $fuel)
     {
         try {

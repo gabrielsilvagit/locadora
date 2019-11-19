@@ -6,6 +6,7 @@ use Exception;
 use App\Rental;
 use App\DropOff;
 use App\Vehicle;
+use Carbon\Carbon;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use App\Http\Requests\DropOffRequest;
@@ -16,47 +17,31 @@ class DropOffController extends Controller
 
     public function index()
     {
-        try {
-            $dropoffs = DropOff::all();
-            return $this->successResponse($dropoffs, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $dropoffs = DropOff::all();
+        return $this->successResponse($dropoffs, 200);
     }
 
     public function store(DropOffRequest $request)
     {
-        try {
-            $dropoff = DropOff::create($request->all());
-
-            $db_dropoff = DropOff::where('id','=',$dropoff->id)->first();
-            $rental = Rental::where('id','=',$dropoff->rental_id)->first();
-            $end_date=$db_dropoff->created_at;
-            $rental->end_date=$end_date;
-            $rental->save();
-
-            return $this->successResponse($dropoff, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $dropoff = DropOff::create($request->all());
+        Rental::find($dropoff->rental_id)->update(["end_date" => Carbon::now() ]); // atualizando data de retorno do aluguel
+        return $this->successResponse($dropoff, 201);
     }
+
+    public function show(DropOff $dropoff)
+    {
+        return $this->successResponse($dropoff);
+    }
+
     public function update(DropOffRequest $request, DropOff $dropoff)
     {
-        try {
-            $dropoff->update($request->all());
-            return $this->successResponse($dropoff, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $dropoff->update($request->all());
+        return $this->successResponse($dropoff, 201);
     }
 
     public function destroy(DropOff $dropoff)
     {
-        try {
-            $dropoff->delete();
-            return $this->successResponse($dropoff, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $dropoff->delete();
+        return $this->successResponse($dropoff, 200);
     }
 }

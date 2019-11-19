@@ -32,6 +32,14 @@ class BrandTest extends TestCase
     }
 
     /** @test */
+    public function show_return_brand()
+    {
+        $brand = factory(Brand::class)->create();
+        $this->json('GET', 'api/brand/'.$brand->id)
+            ->assertStatus(200);
+    }
+
+    /** @test */
     public function brand_can_be_updated()
     {
         $this->withoutExceptionHandling();

@@ -14,40 +14,30 @@ class VehicleController extends Controller
 
     public function index()
     {
-        try {
-            $vehicles = Vehicle::all();
-            return $this->successResponse($vehicles, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $vehicles = Vehicle::all();
+        return $this->successResponse($vehicles, 200);
     }
 
     public function store(VehicleRequest $request)
     {
-        try {
-            $vehicle = Vehicle::create($request->all());
-            return $this->successResponse($vehicle, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $vehicle = Vehicle::create($request->all());
+        return $this->successResponse($vehicle, 201);
     }
+
+    public function show(Vehicle $vehicle)
+    {
+        return $this->successResponse($vehicle);
+    }
+
     public function update(VehicleRequest $request, Vehicle $vehicle)
     {
-        try {
-            $vehicle->update($request->all());
-            return $this->successResponse($vehicle, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $vehicle->update($request->all());
+        return $this->successResponse($vehicle, 201);
     }
 
     public function destroy(Vehicle $vehicle)
     {
-        try {
-            $vehicle->delete();
-            return $this->successResponse($vehicle, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $vehicle->delete();
+        return $this->successResponse($vehicle, 200);
     }
 }

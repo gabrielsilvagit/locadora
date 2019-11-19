@@ -34,11 +34,10 @@ class RentalController extends Controller
 
     public function store(RentalRequest $request)
     {
-
         DB::beginTransaction();
         try {
             $newRental = $request->all();
-            $available = $this->AvailabilityService->available($newRental);
+            $available = $this->AvailabilityService->available($newRental['category_id'], $newRental['start_date'], $newRental['end_date']);
             if($available){
                 $rental = Rental::create($newRental);
                 DB::commit();
@@ -46,18 +45,23 @@ class RentalController extends Controller
                 Notification::send($user, new RentalNotification());
                 return $this->successResponse($rental, 201);
             }
-            return $this->errorResponse('error',400);
+            return $this->errorResponse('Error',400);
         }catch(Exception $exception) {
             DB::rollBack();
             return $this->errorResponse('error',400);
         }
-
     }
+
+    public function show(Rental $rental)
+    {
+        return $this->successResponse($rental);
+    }
+
     public function update(RentalRequest $request, Rental $rental)
     {
         try {
             $newRental = $request->all();
-            $available = $this->AvailabilityService->available($newRental);
+            $available = $this->AvailabilityService->available($newRental['category_id'], $newRental['start_date'], $newRental['end_date']);
             if($available){
                 $rental->update($newRental);
                 DB::commit();

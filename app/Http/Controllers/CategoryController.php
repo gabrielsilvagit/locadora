@@ -14,42 +14,31 @@ class CategoryController extends Controller
 
     public function index()
     {
-        try {
-            $categories = Category::all();
-            return $this->successResponse($categories, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $categories = Category::all();
+        return $this->successResponse($categories, 200);
     }
 
     public function store(CategoryRequest $request)
     {
-        try {
-            // dd($request->all());
-            $category = Category::create($request->all());
-            return $this->successResponse($category, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $category = Category::create($request->all());
+        return $this->successResponse($category, 201);
     }
+
+    public function show(Category $category)
+    {
+        return $this->successResponse($category);
+    }
+
     public function update(CategoryRequest $request, Category $category)
     {
-        try {
-            $category->update($request->all());
-            return $this->successResponse($category, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $category->update($request->all());
+        return $this->successResponse($category, 201);
     }
 
     public function destroy(Category $category)
     {
-        try {
-            $category->delete();
-            return $this->successResponse($category, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $category->delete();
+        return $this->successResponse($category, 200);
     }
 
 

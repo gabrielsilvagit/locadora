@@ -18,6 +18,15 @@ class FuelTest extends TestCase
         $this->json('GET', 'api/fuels')
             ->assertStatus(200);
     }
+
+    /** @test */
+    public function show_return_fuel()
+    {
+        $fuel = factory(Fuel::class)->create();
+        $this->json('GET', 'api/fuel/'.$fuel->id)
+            ->assertStatus(200);
+    }
+
     /** @test */
     public function a_fuel_can_be_created()
     {

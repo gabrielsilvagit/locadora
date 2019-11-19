@@ -14,8 +14,17 @@ class VehicleTest extends TestCase
     /** @test */
     public function index_return_vehicles()
     {
-        $fuel = factory(Vehicle::class)->create();
-        $this->json('GET', 'api/fuels')
+        $vehicles = factory(Vehicle::class)->create();
+        $this->json('GET', 'api/vehicles')
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function show_return_vehicle()
+    {
+        $this->withoutExceptionHandling();
+        $vehicle = factory(Vehicle::class)->create();
+        $this->json('GET', 'api/vehicle/'.$vehicle->id)
             ->assertStatus(200);
     }
 

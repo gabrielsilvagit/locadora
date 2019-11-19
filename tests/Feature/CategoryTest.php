@@ -20,6 +20,14 @@ class CategoryTest extends TestCase
     }
 
     /** @test */
+    public function show_return_category()
+    {
+        $category = factory(Category::class)->create();
+        $this->json('GET', 'api/category/'.$category->id)
+            ->assertStatus(200);
+    }
+
+    /** @test */
     public function a_category_can_be_created()
     {
         $category = factory(Category::class)->make();

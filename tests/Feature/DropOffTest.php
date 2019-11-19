@@ -20,6 +20,14 @@ class DropOffTest extends TestCase
     }
 
     /** @test */
+    public function show_return_dropoff()
+    {
+        $dropoff = factory(DropOff::class)->create();
+        $this->json('GET', 'api/dropoff/'.$dropoff->id)
+            ->assertStatus(200);
+    }
+
+    /** @test */
     public function a_drop_off_can_be_created()
     {
         $dropoff = factory(DropOff::class)->make();

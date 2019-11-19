@@ -18,6 +18,15 @@ class CarModelTest extends TestCase
         $this->json('GET', 'api/carmodels')
             ->assertStatus(200);
     }
+
+    /** @test */
+    public function show_return_carmodel()
+    {
+        $carmodel = factory(CarModel::class)->create();
+        $this->json('GET', 'api/carmodel/'.$carmodel->id)
+            ->assertStatus(200);
+    }
+
     /** @test */
     public function a_car_model_can_be_created()
     {

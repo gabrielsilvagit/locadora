@@ -26,8 +26,8 @@ class ReportController extends Controller
         try{
             $rental= Rental::where('id', '=', $dropoff->rental_id)->first();
             $user = User::where('id', '=', $rental->user_id)->first();
-            $vehicle = Vehicle::where('id', '=', $rental->vehicle_id)->first();
-            $category = Category::where('id', '=', $vehicle->category_id)->first();
+            $category = Category::where('id', '=', $rental->category_id)->first();
+            $vehicle = Vehicle::where('category_id', '=', $category->id)->first();
             $fuel = Fuel::where('id', '=', $vehicle->fuel_id)->first();
             $start_time = \Carbon\Carbon::parse($rental->start_date);
             $finish_time = \Carbon\Carbon::parse($rental->end_date);

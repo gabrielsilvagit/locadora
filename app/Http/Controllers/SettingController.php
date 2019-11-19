@@ -14,40 +14,30 @@ class SettingController extends Controller
 
     public function index()
     {
-        try {
-            $settings = Setting::all();
-            return $this->successResponse($settings, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $settings = Setting::all();
+        return $this->successResponse($settings, 200);
     }
 
     public function store(SettingRequest $request)
     {
-        try {
-            $setting = Setting::create($request->all());
-            return $this->successResponse($setting, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $setting = Setting::create($request->all());
+        return $this->successResponse($setting, 201);
     }
+
+    public function show(Setting $setting)
+    {
+        return $this->successResponse($setting);
+    }
+
     public function update(SettingRequest $request, Setting $setting)
     {
-        try {
-            $setting->update($request->all());
-            return $this->successResponse($setting, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $setting->update($request->all());
+        return $this->successResponse($setting, 201);
     }
 
     public function destroy(Setting $setting)
     {
-        try {
-            $setting->delete();
-            return $this->successResponse($setting, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $setting->delete();
+        return $this->successResponse($setting, 200);
     }
 }

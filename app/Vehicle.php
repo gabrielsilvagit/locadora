@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Services\AvailabilityService;
 use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
@@ -28,5 +29,10 @@ class Vehicle extends Model
     public function category()
     {
         return $this->belongsTo("App\Category", "id", "category_id");
+    }
+
+    public function getRentedAttribute(AvailabilityService $service)
+    {
+        return !$sevice->avaliable($this->id);
     }
 }

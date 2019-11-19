@@ -22,15 +22,25 @@ class RentalTest extends TestCase
     }
 
     /** @test */
+    public function show_return_rental()
+    {
+        $rental = factory(Rental::class)->create();
+        $this->json('GET', 'api/rental/'.$rental->id)
+            ->assertStatus(200);
+    }
+
+    /** @test */
     public function a_rental_can_be_created()
     {
-        $rental = factory(Rental::class)->make();
+        $this->withoutExceptionHandling();
+        factory(Rental::class,10)->create(['category_id'=>1]);
+        $rental = factory(Rental::class)->make(['category_id'=>1]);
         $form = $this->form($rental);
         $response = $this->json('POST', 'api/rentals', $form)
             ->assertStatus(201);
         $this->assertDatabaseHas("rentals", [
             "user_id" => $rental->user_id,
-            "vehicle_id" => $rental->vehicle_id
+            "category_id" => $rental->category_id
         ]);
     }
     /** @test */
@@ -40,7 +50,7 @@ class RentalTest extends TestCase
         $newRental = factory(Rental::class)->make([
             'start_date' => $rental->start_date,
             'end_date' => $rental->end_date,
-            'vehicle_id' => $rental->vehicle_id
+            'category_id' => $rental->category_id
         ]);
 
         $form = $this->form($newRental);
@@ -48,16 +58,17 @@ class RentalTest extends TestCase
             ->assertStatus(400);
         $this->assertDatabaseMissing("rentals", [
             "user_id" => $newRental->user_id,
-            "vehicle_id" => $newRental->vehicle_id
+            "category_id" => $newRental->category_id
         ]);
     }
     /** @test */
     public function a_rental_can_be_updated()
     {
+        $this->withoutExceptionHandling();
         $rental = factory(Rental::class)->create();
         $this->assertDatabaseHas("rentals", [
             "user_id" => $rental->user_id,
-            "vehicle_id" => $rental->vehicle_id
+            "category_id" => $rental->category_id
         ]);
         $newRental = factory(Rental::class)->make();
         $form = $this->form($newRental);
@@ -65,11 +76,11 @@ class RentalTest extends TestCase
             ->assertStatus(201);
         $this->assertDatabaseHas("rentals", [
             "user_id" => $newRental->user_id,
-            "vehicle_id" => $newRental->vehicle_id
+            "category_id" => $newRental->category_id
         ]);
         $this->assertDatabaseMissing("rentals", [
             "user_id" => $rental->user_id,
-            "vehicle_id" => $rental->vehicle_id
+            "category_id" => $rental->category_id
         ]);
     }
 
@@ -81,7 +92,7 @@ class RentalTest extends TestCase
             ->assertStatus(200);
         $this->assertDatabaseMissing("rentals", [
             "user_id" => $rental->user_id,
-            "vehicle_id" => $rental->vehicle_id
+            "category_id" => $rental->category_id
         ]);
     }
 
@@ -91,7 +102,7 @@ class RentalTest extends TestCase
         $form = [];
         $form['type'] = $data->type;
         $form['user_id'] = $data->user_id;
-        $form['vehicle_id'] = $data->vehicle_id;
+        $form['category_id'] = $data->category_id;
         $form['start_date'] = $data->start_date;
         $form['end_date'] = $data->end_date;
         $form['daily_rate'] = $data->daily_rate;

@@ -39,10 +39,20 @@ class UserTest extends TestCase
     }
 
     /** @test */
+    public function show_return_user()
+    {
+        $user = factory(User::class)->create();
+        $this->json('GET', 'api/user/'.$user->id)
+            ->assertStatus(200);
+    }
+
+    /** @test */
     public function a_user_can_be_updated()
     {
         $this->withoutExceptionHandling();
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create([
+            'password' => bcrypt('password')
+        ]);
         $this->assertDatabaseHas("users", [
             "name" => $user->name,
         ]);

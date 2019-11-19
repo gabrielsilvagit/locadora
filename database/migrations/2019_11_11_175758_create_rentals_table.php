@@ -17,17 +17,19 @@ class CreateRentalsTable extends Migration
             $table->bigIncrements('id');
             $table->string('type'); // m = manutencao, l = limpeza, a = aluguel
             $table->bigInteger('user_id')->unsigned();
-            $table->bigInteger('vehicle_id')->unsigned();
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->bigInteger('category_id')->unsigned();
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->float('daily_rate');
             $table->string('notes');
             $table->string('current_km');
             $table->string('fuel_level');
             $table->integer('limited');
+            $table->integer('plate');
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('vehicle_id')->references('id')->on('vehicles');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('plate')->references('plate')->on('vehicles');
             $table->timestamps();
         });
     }

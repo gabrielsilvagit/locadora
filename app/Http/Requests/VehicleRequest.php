@@ -26,9 +26,9 @@ class VehicleRequest extends FormRequest
         return [
             'plate' => 'required',
             'chassi' => 'required',
-            'carmodel_id' => 'required',
-            'fuel_id' => 'required',
-            'category_id' => 'required',
+            'carmodel_id' => 'required|exists:car_models,id',
+            'fuel_id' => 'required|exists:fuels,id',
+            'category_id' => 'required|exists:categories,id',
             'model_year' => 'required',
             'make_year' => 'required'
         ];

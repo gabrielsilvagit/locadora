@@ -25,7 +25,7 @@ class CarModelRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'brand_id' => 'required'
+            'brand_id' => 'required|exists:brands,id'
         ];
     }
 }

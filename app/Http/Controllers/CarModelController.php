@@ -14,40 +14,30 @@ class CarModelController extends Controller
 
     public function index()
     {
-        try {
-            $carmodels = CarModel::all();
-            return $this->successResponse($carmodels, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $carmodels = CarModel::all();
+        return $this->successResponse($carmodels, 200);
     }
 
     public function store(CarModelRequest $request)
     {
-        try {
-            $carmodel = CarModel::create($request->all());
-            return $this->successResponse($carmodel, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $carmodel = CarModel::create($request->all());
+        return $this->successResponse($carmodel, 201);
     }
+
+    public function show(CarModel $carmodel)
+    {
+        return $this->successResponse($carmodel);
+    }
+
     public function update(CarModelRequest $request, CarModel $carmodel)
     {
-        try {
-            $carmodel->update($request->all());
-            return $this->successResponse($carmodel, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $carmodel->update($request->all());
+        return $this->successResponse($carmodel, 201);
     }
 
     public function destroy(CarModel $carmodel)
     {
-        try {
-            $carmodel->delete();
-            return $this->successResponse($carmodel, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $carmodel->delete();
+        return $this->successResponse($carmodel, 200);
     }
 }

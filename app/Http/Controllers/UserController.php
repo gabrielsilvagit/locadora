@@ -36,12 +36,18 @@ class UserController extends Controller
         return $this->successResponse($user, 201);
     }
 
+    public function show(User $user)
+    {
+        return $this->successResponse($user);
+    }
+
     public function update(UserRequest $request, User $user)
     {
-        $password=$request->all(['password']);
-        // $request->all() = Hash::make($password);
-        dd($request->all(['password']));
-        $user->update($request->all());
+        $newUser=$request->all();
+        $password = $newUser['password'];
+        $password = Hash::make($password);
+        $newUser['password']=$password;
+        $user->update($newUser);
         return $this->successResponse($user, 201);
     }
 

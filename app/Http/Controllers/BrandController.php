@@ -14,40 +14,30 @@ class BrandController extends Controller
 
     public function index()
     {
-        try {
-            $brands = Brand::all();
-            return $this->successResponse($brands, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $brands = Brand::all();
+        return $this->successResponse($brands, 200);
     }
 
     public function store(BrandRequest $request)
     {
-        try {
-            $brand = Brand::create($request->all());
-            return $this->successResponse($brand, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $brand = Brand::create($request->all());
+        return $this->successResponse($brand, 201);
     }
+
+    public function show(Brand $brand)
+    {
+        return $this->successResponse($brand);
+    }
+
     public function update(BrandRequest $request, Brand $brand)
     {
-        try {
-            $brand->update($request->all());
-            return $this->successResponse($brand, 201);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $brand->update($request->all());
+        return $this->successResponse($brand, 201);
     }
 
     public function destroy(Brand $brand)
     {
-        try {
-            $brand->delete();
-            return $this->successResponse($brand, 200);
-        } catch (Exception $e) {
-            return $this->errorResponse('Error', 400);
-        }
+        $brand->delete();
+        return $this->successResponse($brand, 200);
     }
 }
