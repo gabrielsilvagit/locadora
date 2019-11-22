@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Fuel;
 use Exception;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
 use App\Http\Requests\FuelRequest;
 
 class FuelController extends Controller
@@ -16,6 +15,7 @@ class FuelController extends Controller
     {
         try {
             $fuels = Fuel::all();
+
             return $this->successResponse($fuels, 200);
         } catch (Exception $e) {
             return $this->errorResponse('Error', 400);
@@ -26,6 +26,7 @@ class FuelController extends Controller
     {
         try {
             $fuel = Fuel::create($request->all());
+
             return $this->successResponse($fuel, 201);
         } catch (Exception $e) {
             return $this->errorResponse('Error', 400);
@@ -41,6 +42,7 @@ class FuelController extends Controller
     {
         try {
             $fuel->update($request->all());
+
             return $this->successResponse($fuel, 201);
         } catch (Exception $e) {
             return $this->errorResponse('Error', 400);
@@ -51,6 +53,7 @@ class FuelController extends Controller
     {
         try {
             $fuel->delete();
+
             return $this->successResponse($fuel, 200);
         } catch (Exception $e) {
             return $this->errorResponse('Error', 400);

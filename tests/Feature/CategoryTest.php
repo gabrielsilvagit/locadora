@@ -2,14 +2,26 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use App\Category;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CategoryTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $user = factory(User::class)->create([
+            'password' => bcrypt('password')
+        ]);
+        $credentials['email'] = $user->email;
+        $credentials['password'] = 'password';
+        $this->json('POST', 'api/login', $credentials)
+        ->assertStatus(200);
+    }
 
     /** @test */
     public function index_return_categories()
@@ -23,7 +35,7 @@ class CategoryTest extends TestCase
     public function show_return_category()
     {
         $category = factory(Category::class)->create();
-        $this->json('GET', 'api/category/'.$category->id)
+        $this->json('GET', 'api/categories/' . $category->id)
             ->assertStatus(200);
     }
 
@@ -34,8 +46,8 @@ class CategoryTest extends TestCase
         $form = $this->form($category);
         $this->json('POST', 'api/categories', $form)
             ->assertStatus(201);
-        $this->assertDatabaseHas("categories", [
-            "name" => $category->name
+        $this->assertDatabaseHas('categories', [
+            'name' => $category->name
         ]);
     }
 
@@ -43,18 +55,18 @@ class CategoryTest extends TestCase
     public function a_category_can_be_updated()
     {
         $category = factory(Category::class)->create();
-        $this->assertDatabaseHas("categories", [
-            "name" => $category->name
+        $this->assertDatabaseHas('categories', [
+            'name' => $category->name
         ]);
         $newCategory = factory(Category::class)->make();
         $form = $this->form($newCategory);
-        $response = $this->json('PUT', 'api/categories/'.$category->id, $form)
+        $response = $this->json('PUT', 'api/categories/' . $category->id, $form)
             ->assertStatus(201);
-        $this->assertDatabaseHas("categories", [
-            "name" => $newCategory->name
+        $this->assertDatabaseHas('categories', [
+            'name' => $newCategory->name
         ]);
-        $this->assertDatabaseMissing("categories", [
-            "name" => $category->name
+        $this->assertDatabaseMissing('categories', [
+            'name' => $category->name
         ]);
     }
 
@@ -62,10 +74,10 @@ class CategoryTest extends TestCase
     public function a_category_can_be_deleted()
     {
         $category = factory(Category::class)->create();
-        $this->json('DELETE', 'api/categories/'.$category->id)
+        $this->json('DELETE', 'api/categories/' . $category->id)
             ->assertStatus(200);
-        $this->assertDatabaseMissing("categories", [
-            "name" => $category->name
+        $this->assertDatabaseMissing('categories', [
+            'name' => $category->name
         ]);
     }
 

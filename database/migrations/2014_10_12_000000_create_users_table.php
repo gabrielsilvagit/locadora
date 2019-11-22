@@ -27,7 +27,6 @@ class CreateUsersTable extends Migration
             $table->string('cnh')->unique();
             $table->boolean('admin');
 
-
             $table->rememberToken();
             $table->timestamps();
         });

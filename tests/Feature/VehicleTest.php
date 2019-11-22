@@ -2,14 +2,26 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use App\Vehicle;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VehicleTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $user = factory(User::class)->create([
+            'password' => bcrypt('password')
+        ]);
+        $credentials['email'] = $user->email;
+        $credentials['password'] = 'password';
+        $this->json('POST', 'api/login', $credentials)
+        ->assertStatus(200);
+    }
 
     /** @test */
     public function index_return_vehicles()
@@ -24,7 +36,7 @@ class VehicleTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $vehicle = factory(Vehicle::class)->create();
-        $this->json('GET', 'api/vehicle/'.$vehicle->id)
+        $this->json('GET', 'api/vehicles/' . $vehicle->id)
             ->assertStatus(200);
     }
 
@@ -36,8 +48,8 @@ class VehicleTest extends TestCase
         $form = $this->form($vehicle);
         $this->json('POST', 'api/vehicles', $form)
             ->assertStatus(201);
-        $this->assertDatabaseHas("vehicles", [
-            "chassi" => $vehicle->chassi
+        $this->assertDatabaseHas('vehicles', [
+            'chassi' => $vehicle->chassi
         ]);
     }
 
@@ -45,18 +57,18 @@ class VehicleTest extends TestCase
     public function a_vehicle_can_be_updated()
     {
         $vehicle = factory(Vehicle::class)->create();
-        $this->assertDatabaseHas("vehicles", [
-            "chassi" => $vehicle->chassi
+        $this->assertDatabaseHas('vehicles', [
+            'chassi' => $vehicle->chassi
         ]);
         $newVehicle = factory(Vehicle::class)->make();
         $form = $this->form($newVehicle);
-        $response = $this->json('PUT', 'api/vehicles/'.$vehicle->id, $form)
+        $response = $this->json('PUT', 'api/vehicles/' . $vehicle->id, $form)
             ->assertStatus(201);
-        $this->assertDatabaseHas("vehicles", [
-            "chassi" => $newVehicle->chassi
+        $this->assertDatabaseHas('vehicles', [
+            'chassi' => $newVehicle->chassi
         ]);
-        $this->assertDatabaseMissing("fuels", [
-            "chassi" => $vehicle->chassi
+        $this->assertDatabaseMissing('fuels', [
+            'chassi' => $vehicle->chassi
         ]);
     }
 
@@ -64,10 +76,10 @@ class VehicleTest extends TestCase
     public function a_vehicle_can_be_deleted()
     {
         $vehicle = factory(Vehicle::class)->create();
-        $this->json('DELETE', 'api/vehicles/'.$vehicle->id)
+        $this->json('DELETE', 'api/vehicles/' . $vehicle->id)
             ->assertStatus(200);
-        $this->assertDatabaseMissing("vehicles", [
-            "chassi" => $vehicle->chassi
+        $this->assertDatabaseMissing('vehicles', [
+            'chassi' => $vehicle->chassi
         ]);
     }
 

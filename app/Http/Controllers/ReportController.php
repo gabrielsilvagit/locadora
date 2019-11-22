@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Fuel;
 use App\User;
+use Exception;
 use App\Rental;
 use App\DropOff;
 use App\Vehicle;
 use App\Category;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
     use ApiResponser;
+
     public function show(DropOff $dropoff)
     {
         $report=[];
@@ -23,7 +24,7 @@ class ReportController extends Controller
         $report['km_price'] = null;
         $report['damage_notes'] = null;
 
-        try{
+        try {
             $rental= Rental::where('id', '=', $dropoff->rental_id)->first();
             $user = User::where('id', '=', $rental->user_id)->first();
             $category = Category::where('id', '=', $rental->category_id)->first();
@@ -33,33 +34,30 @@ class ReportController extends Controller
             $finish_time = \Carbon\Carbon::parse($rental->end_date);
             $daily = $start_time->diffInDays($finish_time, false);
 
-            $dob = \Carbon\Carbon::parse($user->dob);
-            $actual = \Carbon\Carbon::parse(now());
-            $old = $dob->diffInYears($actual, false);
-            if($dropoff->damage == true) {
+            if ($dropoff->damage == true) {
                 $report['damage_notes'] = $dropoff->damage_notes;
             }
-            if(!$rental->limited){
+            if (!$rental->limited) {
                 $report['daily_price']= ($category->free_daily_rate * $daily);
                 $report['km_price']= null;
             } else {
                 $report['daily_price']= $rental->daily_rate * $daily;
-                if(($dropoff->current_km - $rental->current_km) > 1000){
-                    $report['km_price']= (($dropoff->current_km - $rental->current_km) * $category->extra_km_price) ;
+                if (($dropoff->current_km - $rental->current_km) > 1000) {
+                    $report['km_price']= (($dropoff->current_km - $rental->current_km) * $category->extra_km_price);
                 }
             }
-            if($rental->fuel_level>$dropoff->fuel_level) {
+            if ($rental->fuel_level>$dropoff->fuel_level) {
                 $fuel_level=$rental->fuel_level-$dropoff->fuel_level;
                 $report['fuel_price']= $fuel_level * $fuel->price;
             } else {
                 $report['fuel_price']= null;
             }
 
-
+            if ($user->age_aditional) {
+                $report['daily_price']=($report['daily_price']*$rental->age_aditional);
+            }
             $report['total'] = $report['daily_price']+$report['km_price']+$report['fuel_price'];
-                if($old<25){
-                    $report['total']=($report['total']*1.20);
-                }
+
             return $this->successResponse($report, 201);
         } catch (Exception $e) {
             return $this->errorResponse('Error', 400);

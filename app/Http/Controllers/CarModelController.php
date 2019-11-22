@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\CarModel;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
 use App\Http\Requests\CarModelRequest;
 
 class CarModelController extends Controller
@@ -15,12 +13,14 @@ class CarModelController extends Controller
     public function index()
     {
         $carmodels = CarModel::all();
+
         return $this->successResponse($carmodels, 200);
     }
 
     public function store(CarModelRequest $request)
     {
         $carmodel = CarModel::create($request->all());
+
         return $this->successResponse($carmodel, 201);
     }
 
@@ -32,12 +32,14 @@ class CarModelController extends Controller
     public function update(CarModelRequest $request, CarModel $carmodel)
     {
         $carmodel->update($request->all());
+
         return $this->successResponse($carmodel, 201);
     }
 
     public function destroy(CarModel $carmodel)
     {
         $carmodel->delete();
+
         return $this->successResponse($carmodel, 200);
     }
 }

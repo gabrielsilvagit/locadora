@@ -2,14 +2,26 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use App\Brand;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BrandTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $user = factory(User::class)->create([
+            'password' => bcrypt('password')
+        ]);
+        $credentials['email'] = $user->email;
+        $credentials['password'] = 'password';
+        $this->json('POST', 'api/login', $credentials)
+        ->assertStatus(200);
+    }
 
     /** @test */
     public function brand_can_be_create()
@@ -18,8 +30,8 @@ class BrandTest extends TestCase
         $form = $this->form($brand);
         $this->json('POST', 'api/brands', $form)
             ->assertStatus(201);
-        $this->assertDatabaseHas("brands", [
-            "name" => $brand->name
+        $this->assertDatabaseHas('brands', [
+            'name' => $brand->name
         ]);
     }
 
@@ -34,8 +46,9 @@ class BrandTest extends TestCase
     /** @test */
     public function show_return_brand()
     {
+        $this->withoutExceptionHandling();
         $brand = factory(Brand::class)->create();
-        $this->json('GET', 'api/brand/'.$brand->id)
+        $this->json('GET', 'api/brands/' . $brand->id)
             ->assertStatus(200);
     }
 
@@ -44,18 +57,18 @@ class BrandTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $brand = factory(Brand::class)->create();
-        $this->assertDatabaseHas("brands", [
-            "name" => $brand->name
+        $this->assertDatabaseHas('brands', [
+            'name' => $brand->name
         ]);
         $newBrand = factory(Brand::class)->make();
         $form = $this->form($newBrand);
-        $this->json('PUT', 'api/brands/'.$brand->id, $form)
+        $this->json('PUT', 'api/brands/' . $brand->id, $form)
             ->assertStatus(201);
-        $this->assertDatabaseHas("brands", [
-            "name" => $newBrand->name
+        $this->assertDatabaseHas('brands', [
+            'name' => $newBrand->name
         ]);
-        $this->assertDatabaseMissing("brands", [
-            "name" => $brand->name
+        $this->assertDatabaseMissing('brands', [
+            'name' => $brand->name
         ]);
     }
 
@@ -63,13 +76,13 @@ class BrandTest extends TestCase
     public function brand_can_be_deleted()
     {
         $brand = factory(Brand::class)->create();
-        $this->assertDatabaseHas("brands", [
-            "name" => $brand->name
+        $this->assertDatabaseHas('brands', [
+            'name' => $brand->name
         ]);
-        $this->json('DELETE', 'api/brands/'.$brand->id)
+        $this->json('DELETE', 'api/brands/' . $brand->id)
             ->assertStatus(200);
-        $this->assertDatabaseMissing("brands", [
-            "name" => $brand->name
+        $this->assertDatabaseMissing('brands', [
+            'name' => $brand->name
         ]);
     }
 
@@ -77,6 +90,7 @@ class BrandTest extends TestCase
     {
         $form = [];
         $form['name'] = $data->name;
+
         return $form;
     }
 }

@@ -12,6 +12,6 @@ class DropOff extends Model
 
     public function rental()
     {
-        return $this->belongsTo("App\Rental", "id", "rental_id");
+        return $this->belongsTo("App\Rental", 'id', 'rental_id');
     }
 }

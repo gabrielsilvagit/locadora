@@ -22,14 +22,14 @@ class CreateRentalsTable extends Migration
             $table->dateTime('end_date');
             $table->float('daily_rate');
             $table->string('notes');
-            $table->string('current_km');
-            $table->string('fuel_level');
+            $table->string('current_km')->nullable();
+            $table->string('fuel_level')->nullable();
             $table->integer('limited');
-            $table->integer('plate');
+            $table->string('plate')->nullable();
+            $table->integer('age_aditional')->nulllable();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->foreign('plate')->references('plate')->on('vehicles');
             $table->timestamps();
         });
     }

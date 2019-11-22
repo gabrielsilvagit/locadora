@@ -7,6 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Setting::class, function (Faker $faker) {
     return [
-        'base_km' => rand(0,500)
+        'base_km' => rand(200, 500),
+        'age_aditional' => 1.20
     ];
 });

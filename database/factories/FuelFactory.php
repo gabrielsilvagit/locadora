@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(Fuel::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'price' => rand(5,15)
+        'price' => rand(5, 15)
     ];
 });

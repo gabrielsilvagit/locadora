@@ -24,7 +24,8 @@ class SettingRequest extends FormRequest
     public function rules()
     {
         return [
-            'base_km' => 'required'
+            'base_km' => 'required',
+            'age_aditional' => 'required'
         ];
     }
 }

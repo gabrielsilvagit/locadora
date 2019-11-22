@@ -3,13 +3,14 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class PasswordNotification extends Notification
 {
     use Queueable;
+
+    protected $token;
 
     /**
      * Create a new notification instance.
@@ -24,7 +25,7 @@ class PasswordNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -35,13 +36,14 @@ class PasswordNotification extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed                                          $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        $link = '/password/'.$this->token;
-        return (new MailMessage)
+        $link = '/password/' . $this->token;
+
+        return (new MailMessage())
                     ->line('Registre a senha da sua conta.')
                     ->line('Se em até 24horas sua senha não for registrada,')
                     ->line('você terá que solicitar um novo token.')
@@ -52,13 +54,13 @@ class PasswordNotification extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            //
+
         ];
     }
 }

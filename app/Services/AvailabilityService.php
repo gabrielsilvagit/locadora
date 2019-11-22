@@ -4,39 +4,51 @@ namespace App\Services;
 
 use App\Rental;
 use App\Vehicle;
-use App\Category;
 use Carbon\Carbon;
 
-class AvailabilityService {
-
-    public function available($category_id, $start, $end)
+class AvailabilityService
+{
+    public function checkAvaliability($category_id, $startDate, $endDate)
     {
-        $start = Carbon::parse($start);
-        $end = Carbon::parse($end);
-        $unavailable = Rental::where('category_id','=',$category_id)
-            // ->where(function($q1) use($start, $end) {
-            //     return $q1->where($start, "<", "start_date")->where($end, ">", "end_date");
-            // })
-            // ->orWhere(function($q2)  use($start, $end) {
-            //     return $q2->where($start, "<", "start_date")->where($end, "<", "end_date")->where($end,'>',"start_date");
-            // })
-            // ->orWhere(function($q3)  use($start, $end) {
-            //     return $q3->where($start, ">", "start_date")->where($end, ">", "end_date")->where($start,'<',"end_date");
-            // })
-            // ->where(function($q4)  use($start, $end) {
-            //     return $q4->where($start, ">", "start_date")->where($end, "<", "end_date");
-            // })
-            ->where(function($q4)  use($start, $end) {
-                return $q4->where("start_date", Carbon::parse($start)->format("Y-m-d"))->where("end_date", Carbon::parse($end)->format("Y-m-d"));
+        // after every rental the vehicle must be cleaned
+        // to do so, we make sure no vehicle is going to be rented 1 day after returning
+        $startDate = Carbon::parse($startDate)->subDay();
+
+        // get all rentals that overlap the renting dates
+        $rentals = Rental::where('category_id', $category_id)
+            ->where(function ($query) use ($startDate, $endDate) {
+                return $query->where(function ($q1) use ($startDate, $endDate) {
+                    return $q1->where('start_date', '<=', $startDate)
+                            ->where('end_date', '>=', $endDate);
+                })
+                ->orWhere(function ($q2) use ($startDate, $endDate) {
+                    return $q2->where('start_date', '>', $startDate)
+                        ->where('end_date', '<', $endDate);
+                })
+                ->orWhere(function ($q3) use ($startDate, $endDate) {
+                    return $q3->where('start_date', '>', $startDate)
+                        ->where('start_date', '<=', $endDate)
+                        ->where('end_date', '>', $endDate);
+                })
+                ->orWhere(function ($q4) use ($startDate, $endDate) {
+                    return $q4->where('start_date', '<', $startDate)
+                        ->where('end_date', '>=', $startDate)
+                        ->where('end_date', '<', $endDate);
+                })
+                ->orWhere(function ($q5) use ($startDate, $endDate) {
+                    return $q5->where('start_date', '=', $startDate)
+                        ->where('end_date', '<>', $endDate);
+                })
+                ->orWhere(function ($q6) use ($startDate, $endDate) {
+                    return $q6->where('start_date', '<>', $startDate)
+                        ->where('end_date', '=', $endDate);
+                });
             })
             ->count();
-        $total = Vehicle::where('category_id','=',$category_id)->count();
 
-        dd($unavailable,$total, Carbon::parse($start)->format("Y-m-d"), $end);
+        // get all available vehicles for the given category
+        $vehicles = Vehicle::where('category_id', $category_id)->count();
 
-        if ($total >= $unavailable) {
-            return true;
-        }
-        return false;
+        return $vehicles > $rentals;
     }
 }

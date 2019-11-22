@@ -24,16 +24,15 @@ class RentalRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'sometimes|required|exists:users,id',
             'category_id' => 'required|exists:categories,id',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'daily_rate' => 'required',
-            'notes' => 'required',
-            'current_km' => 'required',
-            'fuel_level' => 'required',
-            'limited' => 'required',
+            'current_km'=>'sometimes|required|integer|min:0',
+            'fuel_level'=>'sometimes|required|integer|max:8|min:0',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'notes' => 'string',
+            'free_km' => 'required|boolean',
+            'under_25' => 'required|boolean'
         ];
     }
 }

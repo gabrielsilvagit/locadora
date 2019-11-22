@@ -13,6 +13,7 @@ $factory->define(Vehicle::class, function (Faker $faker) {
     $carmodel = factory(CarModel::class)->create();
     $fuel = factory(Fuel::class)->create();
     $category = factory(Category::class)->create();
+
     return [
         'plate' => Str::random(),
         'chassi' => Str::random(),

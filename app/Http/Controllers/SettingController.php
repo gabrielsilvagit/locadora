@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Setting;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
 use App\Http\Requests\SettingRequest;
 
 class SettingController extends Controller
@@ -15,12 +13,14 @@ class SettingController extends Controller
     public function index()
     {
         $settings = Setting::all();
+
         return $this->successResponse($settings, 200);
     }
 
     public function store(SettingRequest $request)
     {
         $setting = Setting::create($request->all());
+
         return $this->successResponse($setting, 201);
     }
 
@@ -32,12 +32,14 @@ class SettingController extends Controller
     public function update(SettingRequest $request, Setting $setting)
     {
         $setting->update($request->all());
+
         return $this->successResponse($setting, 201);
     }
 
     public function destroy(Setting $setting)
     {
         $setting->delete();
+
         return $this->successResponse($setting, 200);
     }
 }

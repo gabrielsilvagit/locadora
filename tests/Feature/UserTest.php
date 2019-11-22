@@ -4,32 +4,45 @@ namespace Tests\Feature;
 
 use App\User;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $user = factory(User::class)->create([
+            'password' => bcrypt('password')
+        ]);
+        $credentials['email'] = $user->email;
+        $credentials['password'] = 'password';
+        $this->json('POST', 'api/login', $credentials)
+        ->assertStatus(200);
+    }
+
     /** @test */
     public function a_user_can_be_create()
     {
-        $user = factory(User::class)->make();
-        $form = $this->form($user);
-        $this->json('POST', 'api/users', $form)
+        $user = factory(User::class)->make()->toArray();
+        $this->json('POST', 'api/users', $user)
             ->assertStatus(201);
-        $this->assertDatabaseHas("users", [
-            "name" => $user->name
+        $this->assertDatabaseHas('users', [
+            'name' => $user['name']
         ]);
     }
+
     /** @test */
     public function registering_password_after_user_created()
     {
-        $user = factory(User::class)->create();
-        $form['password'] = 'senha';
-        $response = $this->json('POST', route('password', $user->remember_token), $form)
+        $user = factory(User::class)->create()->toArray();
+        $user['password'] = 'senha';
+        $userData = User::find($user['id']);
+        $response = $this->json('POST', route('password', $userData->remember_token), $user)
             ->assertStatus(201);
     }
+
     /** @test */
     public function index_return_users()
     {
@@ -42,31 +55,22 @@ class UserTest extends TestCase
     public function show_return_user()
     {
         $user = factory(User::class)->create();
-        $this->json('GET', 'api/user/'.$user->id)
+        $this->json('GET', 'api/users/' . $user->id)
             ->assertStatus(200);
     }
 
     /** @test */
     public function a_user_can_be_updated()
     {
-        $this->withoutExceptionHandling();
         $user = factory(User::class)->create([
             'password' => bcrypt('password')
         ]);
-        $this->assertDatabaseHas("users", [
-            "name" => $user->name,
-        ]);
-        $newUser = factory(User::class)->make();
-        $form = $this->form($newUser);
-        $form['password'] = 'password';
-        $response = $this->json('PUT', 'api/users/'.$user->id, $form)
+        $newUser = factory(User::class)->make()->toArray();
+        $newUser['password'] = 'password';
+        $response = $this->json('PUT', 'api/users/' . $user->id, $newUser)
             ->assertStatus(201);
-
-        $this->assertDatabaseMissing("users", [
-            "name" => $user->name,
-        ]);
-        $this->assertDatabaseHas("users", [
-            "name" => $newUser->name,
+        $this->assertDatabaseHas('users', [
+            'name' => $newUser['name'],
         ]);
     }
 
@@ -74,26 +78,10 @@ class UserTest extends TestCase
     public function a_user_can_be_deleted()
     {
         $user = factory(User::class)->create();
-        $response = $this->json('DELETE', 'api/users/'.$user->id)
+        $response = $this->json('DELETE', 'api/users/' . $user->id)
             ->assertStatus(200);
-        $this->assertDatabaseMissing("users", [
-            "name" => $user->name,
+        $this->assertDatabaseMissing('users', [
+            'name' => $user->name,
         ]);
-    }
-
-    private function form($data)
-    {
-        $form = [];
-        $form['name'] = $data->name;
-        $form['email'] = $data->email;
-        $form['address'] = $data->address;
-        $form['city'] = $data->city;
-        $form['state'] = $data->state;
-        $form['country'] = $data->country;
-        $form['cpf'] = $data->cpf;
-        $form['dob'] = $data->dob;
-        $form['cnh'] = $data->cnh;
-        $form['admin'] = $data->admin;
-        return $form;
     }
 }

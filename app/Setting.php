@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     protected $fillable = [
-        'base_km'
+        'base_km', 'age_aditional'
     ];
 }

@@ -18,21 +18,21 @@ class Vehicle extends Model
 
     public function carmodel()
     {
-        return $this->belongsTo("App\CarModel", "id", "carmodel_id");
+        return $this->belongsTo("App\CarModel", 'id', 'carmodel_id');
     }
 
     public function fuel()
     {
-        return $this->belongsTo("App\Fuel", "id", "fuel_id");
+        return $this->belongsTo("App\Fuel", 'id', 'fuel_id');
     }
 
     public function category()
     {
-        return $this->belongsTo("App\Category", "id", "category_id");
+        return $this->belongsTo("App\Category", 'id', 'category_id');
     }
 
-    public function getRentedAttribute(AvailabilityService $service)
-    {
-        return !$sevice->avaliable($this->id);
-    }
+    // public function getRentedAttribute(AvailabilityService $service)
+    // {
+    //     return !$service->available($this->id);
+    // }
 }

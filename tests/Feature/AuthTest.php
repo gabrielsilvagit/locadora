@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\User;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
+
     /** @test */
     public function user_can_be_loggin_with_correct_credential()
     {
@@ -21,6 +21,7 @@ class AuthTest extends TestCase
         $this->json('POST', 'api/login', $form)
             ->assertStatus(200);
     }
+
     /** @test */
     public function user_cannot_be_loggin_with_incorrect_email()
     {
@@ -33,6 +34,7 @@ class AuthTest extends TestCase
         $this->json('POST', 'api/login', $form)
             ->assertStatus(400);
     }
+
     /** @test */
     public function user_cannot_be_loggin_with_incorrect_password()
     {
@@ -49,6 +51,7 @@ class AuthTest extends TestCase
     {
         $form['email'] = $data->email;
         $form['password'] = $data->password;
+
         return $form;
     }
 }

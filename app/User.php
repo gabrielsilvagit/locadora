@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Passport\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\PasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
@@ -47,7 +47,6 @@ class User extends Authenticatable implements JWTSubject
     public function sendPasswordNotification($token)
     {
         $this->notify(new PasswordNotification($token));
-
     }
 
     public function getJWTIdentifier()
@@ -62,6 +61,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function isAdmin()
     {
-        return $this->admin;
+        return $this->admin == true;
     }
 }

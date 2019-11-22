@@ -18,7 +18,6 @@ use Faker\Provider\pt_BR\Person;
 */
 
 $factory->define(User::class, function (Faker $faker) {
-
     $person = new Person($faker);
 
     return [
