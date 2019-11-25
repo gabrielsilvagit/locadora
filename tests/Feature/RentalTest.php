@@ -4,14 +4,13 @@ namespace Tests\Feature;
 
 use App\User;
 use App\Rental;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RentalTest extends TestCase
 {
     use RefreshDatabase;
-
-    // TODO: Rental tests
 
     public function setUp(): void
     {
@@ -26,77 +25,68 @@ class RentalTest extends TestCase
     }
 
     /** @test */
-    public function index_return_rentals()
+    public function indexReturnRentals()
     {
-        $rental = factory(Rental::class)->create([
-            'type'=>'Aluguel',
+        factory(Rental::class, 10)->states('forCreate')->create([
+            'start_date' => Carbon::today(),
+            'end_date' => Carbon::today()->addDays(5),
         ]);
         $this->json('GET', 'api/rentals')
             ->assertStatus(200);
     }
 
     /** @test */
-    public function show_return_rental()
+    public function showReturnRental()
     {
-        $rental = factory(Rental::class)->create();
+        $rental = factory(Rental::class)->states('forCreate')->create();
         $this->json('GET', 'api/rentals/' . $rental->id)
             ->assertStatus(200);
     }
 
     /** @test */
-    public function a_rental_can_be_created()
+    public function aRentalCanBeCreated()
     {
-        $this->withoutExceptionHandling();
-        factory(Rental::class, 10)->create([
-            'type' => 'Aluguel',
-            'category_id'=>1,
-        ]);
-        $rental = factory(Rental::class)->make([
-            'type' => 'Aluguel',
-            'category_id'=>1
-        ])->toArray();
+        $rental = factory(Rental::class)->states('forMake')->make()->toArray();
         $this->json('POST', 'api/rentals', $rental)
             ->assertStatus(201);
+        $rentalDB = Rental::find(1);
         $this->assertDatabaseHas('rentals', [
-            'user_id' => $rental->user_id,
-            'category_id' => $rental->category_id
+            'user_id' => $rentalDB->user_id,
+            'category_id' => $rentalDB->category_id
         ]);
     }
 
     /** @test */
-    public function a_rental_cannot_be_created_if_car_unvailable()
+    public function aRentalCannotBeCreatedIfCarUnvailable()
     {
-        $rental = factory(Rental::class)->create();
-        $newRental = factory(Rental::class)->make([
+        $rental = factory(Rental::class)->states('forCreate')->create();
+        $newRental = factory(Rental::class)->states('forMake')->make([
             'start_date' => $rental->start_date,
             'end_date' => $rental->end_date,
             'category_id' => $rental->category_id
-        ]);
-
-        $form = $this->form($newRental);
-        $response = $this->json('POST', 'api/rentals', $form)
-            ->assertStatus(400);
+        ])->toArray();
+        $this->json('POST', 'api/rentals', $newRental)
+            ->assertStatus(403);
         $this->assertDatabaseMissing('rentals', [
-            'user_id' => $newRental->user_id,
-            'category_id' => $newRental->category_id
+            'notes' => $newRental['notes'],
         ]);
     }
 
     /** @test */
-    public function a_rental_can_be_updated()
+    public function aRentalCanBeUpdated()
     {
-        $rental = factory(Rental::class)->create();
+        $rental = factory(Rental::class)->states('forCreate')->create();
         $this->assertDatabaseHas('rentals', [
             'user_id' => $rental->user_id,
             'category_id' => $rental->category_id
         ]);
-        $newRental = factory(Rental::class)->make()->toArray();
-        $form = $this->form($newRental);
-        $response = $this->json('PUT', 'api/rentals/' . $rental->id, $form)
+        $newRental = factory(Rental::class)->states('forMake')->make()->toArray();
+        $this->json('PUT', 'api/rentals/' . $rental->id, $newRental)
             ->assertStatus(201);
+        $rentalDB = Rental::find($rental->id);
         $this->assertDatabaseHas('rentals', [
-            'user_id' => $newRental->user_id,
-            'category_id' => $newRental->category_id
+            'user_id' => $rentalDB['user_id'],
+            'category_id' => $rentalDB['category_id']
         ]);
         $this->assertDatabaseMissing('rentals', [
             'user_id' => $rental->user_id,
@@ -105,9 +95,9 @@ class RentalTest extends TestCase
     }
 
     /** @test */
-    public function a_rental_can_be_deleted()
+    public function aRentalCanBeDeleted()
     {
-        $rental = factory(Rental::class)->create();
+        $rental = factory(Rental::class)->states('forCreate')->create();
         $this->json('DELETE', 'api/rentals/' . $rental->id)
             ->assertStatus(200);
         $this->assertDatabaseMissing('rentals', [

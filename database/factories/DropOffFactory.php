@@ -7,7 +7,7 @@ use App\DropOff;
 use Faker\Generator as Faker;
 
 $factory->define(DropOff::class, function (Faker $faker) {
-    $rental = factory(Rental::class)->create();
+    $rental = factory(Rental::class)->states('forCreate')->create();
 
     return [
         'damage' => $faker->boolean($chanceOfGettingTrue = 50),

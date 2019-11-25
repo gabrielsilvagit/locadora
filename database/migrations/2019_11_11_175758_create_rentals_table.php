@@ -20,13 +20,13 @@ class CreateRentalsTable extends Migration
             $table->bigInteger('category_id')->unsigned();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->float('daily_rate');
-            $table->string('notes');
+            $table->float('daily_rate')->nullable();
+            $table->string('notes')->nullable();
             $table->string('current_km')->nullable();
             $table->string('fuel_level')->nullable();
-            $table->integer('limited');
+            $table->integer('free_km')->nullable();
             $table->string('plate')->nullable();
-            $table->integer('age_aditional')->nulllable();
+            $table->integer('age_aditional')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');

@@ -11,8 +11,6 @@ class DropOffTest extends TestCase
 {
     use RefreshDatabase;
 
-    // TODO: dropoffs tests
-
     public function setUp(): void
     {
         parent::setUp();
@@ -26,15 +24,15 @@ class DropOffTest extends TestCase
     }
 
     /** @test */
-    public function index_return_drop_off()
+    public function indexReturnDropOff()
     {
-        $dropoff = factory(DropOff::class)->create();
+        factory(DropOff::class)->create();
         $this->json('GET', 'api/dropoffs')
             ->assertStatus(200);
     }
 
     /** @test */
-    public function show_return_dropoff()
+    public function showReturnDropoff()
     {
         $dropoff = factory(DropOff::class)->create();
         $this->json('GET', 'api/dropoffs/' . $dropoff->id)
@@ -42,30 +40,28 @@ class DropOffTest extends TestCase
     }
 
     /** @test */
-    public function a_drop_off_can_be_created()
+    public function aDropOffCanBeCreated()
     {
-        $dropoff = factory(DropOff::class)->make();
-        $form = $this->form($dropoff);
-        $response = $this->json('POST', 'api/dropoffs', $form)
+        $dropoff = factory(DropOff::class)->make()->toArray();
+        $response = $this->json('POST', 'api/dropoffs', $dropoff)
             ->assertStatus(201);
         $this->assertDatabaseHas('drop_offs', [
-            'damage_notes' => $dropoff->damage_notes
+            'damage_notes' => $dropoff['damage_notes']
         ]);
     }
 
     /** @test */
-    public function a_drop_off_can_be_updated()
+    public function aDropOffCanBeUpdated()
     {
         $dropoff = factory(DropOff::class)->create();
         $this->assertDatabaseHas('drop_offs', [
             'damage_notes' => $dropoff->damage_notes
         ]);
-        $newFuel = factory(DropOff::class)->make();
-        $form = $this->form($newFuel);
-        $response = $this->json('PUT', 'api/dropoffs/' . $dropoff->id, $form)
+        $newDropoff = factory(DropOff::class)->make()->toArray();
+        $this->json('PUT', 'api/dropoffs/' . $dropoff->id, $newDropoff)
             ->assertStatus(201);
         $this->assertDatabaseHas('drop_offs', [
-            'damage_notes' => $newFuel->damage_notes
+            'damage_notes' => $newDropoff['damage_notes']
         ]);
         $this->assertDatabaseMissing('drop_offs', [
             'damage_notes' => $dropoff->damage_notes
@@ -73,7 +69,7 @@ class DropOffTest extends TestCase
     }
 
     /** @test */
-    public function a_drop_off_can_be_deleted()
+    public function aDropOffCanBeDeleted()
     {
         $dropoff = factory(DropOff::class)->create();
         $this->json('DELETE', 'api/dropoffs/' . $dropoff->id)
@@ -81,19 +77,5 @@ class DropOffTest extends TestCase
         $this->assertDatabaseMissing('drop_offs', [
             'damage_notes' => $dropoff->damage_notes
         ]);
-    }
-
-    private function form($data)
-    {
-        $form = [];
-        $form['damage'] = $data->damage;
-        $form['damage_notes'] = $data->damage_notes;
-        $form['clean'] = $data->clean;
-        $form['clean_notes'] = $data->clean_notes;
-        $form['fuel_level'] = $data->fuel_level;
-        $form['current_km'] = $data->current_km;
-        $form['rental_id'] = $data->rental_id;
-
-        return $form;
     }
 }

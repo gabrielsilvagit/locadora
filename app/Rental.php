@@ -8,7 +8,7 @@ class Rental extends Model
 {
     protected $fillable = [
         'type', 'user_id', 'category_id', 'start_date', 'end_date', 'daily_rate', 'notes',
-        'current_km', 'fuel_level', 'limited', 'plate', 'age_aditional'
+        'current_km', 'fuel_level', 'free_km', 'plate', 'age_aditional'
     ];
 
     public function user()

@@ -74,7 +74,7 @@ class RentalController extends Controller
             "end_date" => $endDate,
             "daily_rate" => $dailyRate,
             "notes" => $request->notes,
-            "limited" => $free_km,
+            "free_km" => $free_km,
             "age_aditional" => $ageTax
         ];
 
@@ -128,7 +128,7 @@ class RentalController extends Controller
             "end_date" => $endDate,
             "daily_rate" => $dailyRate,
             "notes" => $request->notes,
-            "limited" => $free_km,
+            "free_km" => $free_km,
             "age_aditional" => $ageTax
         ];
 

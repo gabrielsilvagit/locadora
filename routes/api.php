@@ -62,7 +62,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/vehicles/{vehicle}', 'VehicleController@destroy');
 
         Route::get('/dropoffs', 'DropOffController@index');
-        Route::get('/dropoff/{dropoff}', 'DropOffController@show');
+        Route::get('/dropoffs/{dropoff}', 'DropOffController@show');
         Route::post('/dropoffs', 'DropOffController@store');
         Route::put('/dropoffs/{dropoff}', 'DropOffController@update');
         Route::delete('/dropoffs/{dropoff}', 'DropOffController@destroy');
@@ -74,5 +74,21 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/settings/{setting}', 'SettingController@destroy');
 
         Route::get('/reports/{dropoff}', 'ReportController@show');
+
+        Route::get('/maintenances', 'MaintenanceController@index');
+        Route::get('/maintenances/{maintenance}', 'MaintenanceController@show');
+        Route::post('/maintenances', 'MaintenanceController@store');
+        Route::put('/maintenances/{maintenance}', 'MaintenanceController@update');
+        Route::delete('/maintenances/{maintenance}', 'MaintenanceController@destroy');
+
+        Route::get('/cleanings', 'CleaningController@index');
+        Route::get('/cleanings/{cleaning}', 'CleaningController@show');
+        Route::post('/cleanings', 'CleaningController@store');
+        Route::put('/cleanings/{cleaning}', 'CleaningController@update');
+        Route::delete('/cleanings/{cleaning}', 'CleaningController@destroy');
+
+        Route::post('/checkouts', 'CheckoutController@checkout');
+
+        Route::get('/dashboard', 'DashboardController@index');
     });
 });

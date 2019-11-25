@@ -37,7 +37,7 @@ class ReportController extends Controller
             if ($dropoff->damage == true) {
                 $report['damage_notes'] = $dropoff->damage_notes;
             }
-            if (!$rental->limited) {
+            if (!$rental->free_km) {
                 $report['daily_price']= ($category->free_daily_rate * $daily);
                 $report['km_price']= null;
             } else {
