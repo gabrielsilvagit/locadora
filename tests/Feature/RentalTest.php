@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\User;
 use App\Rental;
-use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -27,10 +26,7 @@ class RentalTest extends TestCase
     /** @test */
     public function indexReturnRentals()
     {
-        factory(Rental::class, 10)->states('forCreate')->create([
-            'start_date' => Carbon::today(),
-            'end_date' => Carbon::today()->addDays(5),
-        ]);
+        factory(Rental::class)->states('forCreate')->create();
         $this->json('GET', 'api/rentals')
             ->assertStatus(200);
     }

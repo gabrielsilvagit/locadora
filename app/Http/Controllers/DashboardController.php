@@ -21,8 +21,8 @@ class DashboardController extends Controller
             $vehiclesPerCategory = Vehicle::where('plate', $plate)->orderBy('category')->get();
         }
         $maintenanceVehicles = Rental::where('type', 'maintenance')
-        ->where('end_date', '>',  Carbon::today());
+        ->where('end_date', '>', Carbon::today());
         $cleaningVehicles = Rental::where('type', 'cleaning')
-        ->where('end_date', '>=',  Carbon::today());
+        ->where('end_date', '>=', Carbon::today());
     }
 }
