@@ -29,11 +29,10 @@ class DashboardTest extends TestCase
     {
         $rentals = factory(Rental::class)->states('forCreate')->create([
             'start_date' => Carbon::today(),
-            'end_date' => Carbon::today()->addDays(5);
+            'end_date' => Carbon::today()->addDays(5),
         ]);
         dd($rentals);
         $this->json('GET', 'api/dashboard')
         ->assertStatus(200);
     }
-
 }
