@@ -11,8 +11,9 @@ class CheckOutCleaningService
     {
         $rental_id = $request->rental_id;
         $rental=Rental::find($rental_id);
-        if ($rental->plate == $request->plate) {
-            $rental['plate'] = $request->plate;
+        $vehicle = Vehicle::where('plate', $request->plate)->get();
+        if ($rental->vehicle->plate == $request->plate) {
+            $rental['vehicle_id'] = $vehicle->id;
             $rental['start_date'] = Carbon::today();
             $rental->save();
             return $rental;

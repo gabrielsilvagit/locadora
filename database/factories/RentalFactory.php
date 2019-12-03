@@ -11,9 +11,7 @@ use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(Rental::class, function (Faker $faker) {
-    $vehicle = factory(Vehicle::class)->create();
-    $category = Category::find($vehicle->category_id);
-
+    $category = factory(Category::class)->create();
     $start = rand(0, 1000);
     $end = $start-5;
 
@@ -34,14 +32,16 @@ $factory->state(Rental::class, 'forMake', function (Faker $faker) {
 
 $factory->state(Rental::class, 'forCreate', function (Faker $faker) {
     $user = factory(User::class)->create();
-    $vehicle = factory(Vehicle::class)->create();
     $setting = factory(Setting::class)->create();
-    $category = Category::find($vehicle->category_id);
+    $category = factory(Category::class)->create();
+    $vehicle = factory(Vehicle::class)->create(['category_id' => $category->id]);
 
     return [
         "user_id" => $user->id,
+        "category_id" => $category->id,
         "type" => "rent",
+        "age_aditional" => $setting->age_aditional,
         "daily_rate" => $category->daily_rate,
-        "age_aditional" => $setting->age_aditional
+        "vehicle_id" => $vehicle->id
     ];
 });

@@ -59,7 +59,6 @@ class CleaningTest extends TestCase
     /** @test */
     public function aCleaningCanBeUpdated()
     {
-        $this->withoutExceptionHandling();
         $cleaning = factory(Cleaning::class)->make()->toArray();
         $this->json('POST', 'api/cleanings', $cleaning)
             ->assertStatus(201);

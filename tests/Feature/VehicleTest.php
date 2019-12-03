@@ -34,7 +34,6 @@ class VehicleTest extends TestCase
     /** @test */
     public function show_return_vehicle()
     {
-        $this->withoutExceptionHandling();
         $vehicle = factory(Vehicle::class)->create();
         $this->json('GET', 'api/vehicles/' . $vehicle->id)
             ->assertStatus(200);
@@ -43,7 +42,6 @@ class VehicleTest extends TestCase
     /** @test */
     public function a_vehicle_can_be_created()
     {
-        $this->withoutExceptionHandling();
         $vehicle = factory(Vehicle::class)->make();
         $form = $this->form($vehicle);
         $this->json('POST', 'api/vehicles', $form)

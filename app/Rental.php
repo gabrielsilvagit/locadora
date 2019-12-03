@@ -8,7 +8,7 @@ class Rental extends Model
 {
     protected $fillable = [
         'type', 'user_id', 'category_id', 'start_date', 'end_date', 'daily_rate', 'notes',
-        'current_km', 'fuel_level', 'free_km', 'plate', 'age_aditional'
+        'current_km', 'fuel_level', 'free_km', 'vehicle_id', 'age_aditional'
     ];
 
     public function user()
@@ -21,9 +21,9 @@ class Rental extends Model
         return $this->hasOne("App\Category", 'id', 'category_id');
     }
 
-    public function plate()
+    public function vehicle()
     {
-        return $this->hasOne("App\Vehicle");
+        return $this->hasOne("App\Vehicle", 'id', 'vehicle_id');
     }
 
     public function dropoff()

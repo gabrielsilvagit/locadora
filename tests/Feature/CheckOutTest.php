@@ -33,12 +33,13 @@ class CheckOutTest extends TestCase
     {
         $rental = factory(Rental::class)->states('forCreate')->create();
         $this->assertDatabaseHas('rentals', [
-            'plate' => null,
+            'vehicle_id' => $rental->vehicle_id,
             'current_km'=> null,
             'fuel_level'=> null,
             'start_date'=> $rental->start_date
         ]);
         $vehicle = Vehicle::where('category_id', $rental['category_id'])->first();
+
         $data = [
             'rental_id' => $rental['id'],
             'plate' => $vehicle->plate,
@@ -50,13 +51,13 @@ class CheckOutTest extends TestCase
             ->assertStatus(201);
         $updatedRental = Rental::find($rental->id);
         $this->assertDatabaseHas('rentals', [
-            'plate' => $vehicle->plate,
+            'vehicle_id' => $vehicle->id,
             'current_km'=> $updatedRental->current_km,
             'fuel_level'=> $updatedRental->fuel_level,
             'start_date'=> $updatedRental->start_date
         ]);
         $this->assertDatabaseMissing('rentals', [
-            'plate' => null,
+            'vehicle_id' => null,
             'current_km'=> null,
             'fuel_level'=> null,
             'start_date'=> $rental->start_date
@@ -71,7 +72,7 @@ class CheckOutTest extends TestCase
         $maintenanceDB = Rental::find(1);
         $data = [
             'rental_id' => $maintenanceDB->id,
-            'plate' => $maintenanceDB->plate
+            'plate' => $maintenance['plate']
         ];
         $this->json('POST', 'api/checkouts/', $data)
             ->assertStatus(201);
@@ -85,7 +86,7 @@ class CheckOutTest extends TestCase
         $cleaningDB = Rental::find(1);
         $data = [
             'rental_id' => $cleaningDB->id,
-            'plate' => $cleaningDB->plate
+            'plate' => $cleaning['plate']
         ];
         $this->json('POST', 'api/checkouts/', $data)
             ->assertStatus(201);

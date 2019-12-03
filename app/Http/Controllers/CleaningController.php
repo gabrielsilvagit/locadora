@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rental;
+use App\Vehicle;
 use Carbon\Carbon;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class CleaningController extends Controller
     public function store(CleaningRequest $request)
     {
         $end_date = Carbon::parse($request->start_date)->addDay();
+        $vehicle = Vehicle::where('plate', $request->plate)->first();
         $data = [
             'user_id' => Auth::id(),
             'type' => 'cleaning',
@@ -29,7 +31,7 @@ class CleaningController extends Controller
             'end_date' => $end_date,
             'category_id' => $request->category_id,
             'notes' => $request->notes,
-            'plate' => $request->plate,
+            'vehicle_id' => $vehicle->id,
         ];
         $cleaning = Rental::create($data);
         return $this->successResponse($cleaning, 201);
@@ -43,6 +45,7 @@ class CleaningController extends Controller
     public function update(CleaningRequest $request, Rental $cleaning)
     {
         $end_date = Carbon::parse($request->start_date)->addDay();
+        $vehicle = Vehicle::where('plate', $request->plate)->first();
         $data = [
             'user_id' => Auth::id(),
             'type' => 'cleaning',
@@ -50,7 +53,7 @@ class CleaningController extends Controller
             'end_date' => $end_date,
             'category_id' => $request->category_id,
             'notes' => $request->notes,
-            'plate' => $request->plate,
+            'vehicle_id' => $vehicle->id,
         ];
         $cleaning->update($data);
         return $this->successResponse($cleaning, 201);

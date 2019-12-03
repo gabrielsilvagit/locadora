@@ -41,7 +41,7 @@ class PasswordNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $link = '/password/' . $this->token;
+        $link = 'http://localhost:3000/password/' . $this->token;
 
         return (new MailMessage())
                     ->line('Registre a senha da sua conta.')

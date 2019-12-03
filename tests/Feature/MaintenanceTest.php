@@ -59,7 +59,6 @@ class MaintenanceTest extends TestCase
     /** @test */
     public function aMaintenanceCanBeUpdated()
     {
-        $this->withoutExceptionHandling();
         $maintenance = factory(Maintenance::class)->make()->toArray();
         $this->json('POST', 'api/maintenances', $maintenance)
             ->assertStatus(201);

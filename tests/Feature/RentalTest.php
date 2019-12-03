@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\User;
 use App\Rental;
+use App\Vehicle;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -42,7 +43,11 @@ class RentalTest extends TestCase
     /** @test */
     public function aRentalCanBeCreated()
     {
+        $this->withoutExceptionHandling();
         $rental = factory(Rental::class)->states('forMake')->make()->toArray();
+        factory(Vehicle::class)->create([
+            'category_id' => $rental['category_id']
+        ]);
         $this->json('POST', 'api/rentals', $rental)
             ->assertStatus(201);
         $rentalDB = Rental::find(1);
@@ -77,6 +82,9 @@ class RentalTest extends TestCase
             'category_id' => $rental->category_id
         ]);
         $newRental = factory(Rental::class)->states('forMake')->make()->toArray();
+        factory(Vehicle::class)->create([
+            'category_id' => $newRental['category_id']
+        ]);
         $this->json('PUT', 'api/rentals/' . $rental->id, $newRental)
             ->assertStatus(201);
         $rentalDB = Rental::find($rental->id);

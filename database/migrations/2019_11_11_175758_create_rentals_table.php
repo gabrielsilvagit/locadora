@@ -25,11 +25,12 @@ class CreateRentalsTable extends Migration
             $table->string('current_km')->nullable();
             $table->string('fuel_level')->nullable();
             $table->integer('free_km')->nullable();
-            $table->string('plate')->nullable();
+            $table->string('vehicle_id')->nullable();
             $table->integer('age_aditional')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles');
             $table->timestamps();
         });
     }

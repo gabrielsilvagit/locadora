@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rental;
+use App\Vehicle;
 use Carbon\Carbon;
 use App\Maintenance;
 use App\Traits\ApiResponser;
@@ -23,6 +24,7 @@ class MaintenanceController extends Controller
     public function store(MaintenanceRequest $request)
     {
         $end_date = Carbon::parse($request->start_date)->addYears(5000);
+        $vehicle = Vehicle::where('plate', $request->plate)->select('id')->first();
         $data = [
             'user_id' => Auth::id(),
             'type' => 'maintenance',
@@ -30,7 +32,7 @@ class MaintenanceController extends Controller
             'end_date' => $end_date,
             'category_id' => $request->category_id,
             'notes' => $request->notes,
-            'plate' => $request->plate,
+            'vehicle_id' => $vehicle->id,
         ];
         $maintenance = Rental::create($data);
         return $this->successResponse($maintenance, 201);
@@ -44,6 +46,7 @@ class MaintenanceController extends Controller
     public function update(MaintenanceRequest $request, Rental $maintenance)
     {
         $end_date = Carbon::parse($request->start_date)->addYears(5000);
+        $vehicle = Vehicle::where('plate', $request->plate)->first();
         $data = [
             'user_id' => Auth::id(),
             'type' => 'maintenance',
@@ -51,7 +54,7 @@ class MaintenanceController extends Controller
             'end_date' => $end_date,
             'category_id' => $request->category_id,
             'notes' => $request->notes,
-            'plate' => $request->plate,
+            'vehicle_id' => $vehicle->id,
         ];
         $maintenance->update($data);
         return $this->successResponse($maintenance, 201);

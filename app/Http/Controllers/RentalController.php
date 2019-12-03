@@ -79,7 +79,6 @@ class RentalController extends Controller
         ];
 
         $rental = Rental::create($rentalData);
-
         $user = User::where('id', '=', $rentalData['user_id'])->first();
         Notification::send($user, new RentalNotification());
 

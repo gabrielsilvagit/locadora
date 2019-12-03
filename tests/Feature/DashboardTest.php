@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\User;
 use App\Rental;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,11 +28,34 @@ class DashboardTest extends TestCase
     /** @test */
     public function dashboardIndex()
     {
-        $rentals = factory(Rental::class)->states('forCreate')->create([
+        $this->withoutExceptionHandling();
+        factory(Rental::class, 10)->states('forCreate')->create([
             'start_date' => Carbon::today(),
             'end_date' => Carbon::today()->addDays(5),
         ]);
-        dd($rentals);
+        factory(Rental::class, 10)->states('forCreate')->create([
+            'start_date' => Carbon::today()->addDay(),
+            'end_date' => Carbon::today()->addDays(6),
+        ]);
+        factory(Rental::class, 10)->states('forCreate')->create([
+            'start_date' => Carbon::today()->subDays(10),
+            'end_date' => Carbon::today()->subDays(5),
+        ]);
+        factory(Rental::class, 10)->states('forCreate')->create([
+            'start_date' => Carbon::today()->addDays(5),
+            'end_date' => Carbon::today()->addDays(10),
+        ]);
+        factory(Rental::class, 10)->states('forCreate')->create([
+            'type' => 'maintenance',
+            'start_date' => Carbon::today()->subDays(5),
+            'end_date' => Carbon::today()->addDays(10),
+        ]);
+        factory(Rental::class, 10)->states('forCreate')->create([
+            'type' => 'cleaning',
+            'start_date' => Carbon::today()->subDays(5),
+            'end_date' => Carbon::today()->addDays(10),
+        ]);
+
         $this->json('GET', 'api/dashboard')
         ->assertStatus(200);
     }

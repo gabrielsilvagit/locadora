@@ -13,6 +13,11 @@ class PasswordController extends Controller
 {
     use ApiResponser;
 
+    public function index()
+    {
+        
+    }
+
     public function create(PasswordRequest $request, $token)
     {
         try {

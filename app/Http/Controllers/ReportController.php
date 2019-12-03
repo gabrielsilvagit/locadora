@@ -9,7 +9,10 @@ use App\Rental;
 use App\DropOff;
 use App\Vehicle;
 use App\Category;
+use App\Setting;
+use Carbon\Carbon;
 use App\Traits\ApiResponser;
+use phpDocumentor\Reflection\Types\Integer;
 
 class ReportController extends Controller
 {
@@ -26,23 +29,28 @@ class ReportController extends Controller
 
         try {
             $rental= Rental::where('id', '=', $dropoff->rental_id)->first();
+            $settings= Setting::find(1);
             $user = User::where('id', '=', $rental->user_id)->first();
             $category = Category::where('id', '=', $rental->category_id)->first();
             $vehicle = Vehicle::where('category_id', '=', $category->id)->first();
             $fuel = Fuel::where('id', '=', $vehicle->fuel_id)->first();
-            $start_time = \Carbon\Carbon::parse($rental->start_date);
-            $finish_time = \Carbon\Carbon::parse($rental->end_date);
+            $start_time = Carbon::parse($rental->start_date);
+            $finish_time = Carbon::parse($rental->end_date);
             $daily = $start_time->diffInDays($finish_time, false);
 
-            if ($dropoff->damage == true) {
+            if ($daily == 0) {
+                $daily = 1;
+            }
+
+            if ($dropoff->damage == false) {
                 $report['damage_notes'] = $dropoff->damage_notes;
             }
-            if (!$rental->free_km) {
+            if (!!$rental->free_km) {
                 $report['daily_price']= ($category->free_daily_rate * $daily);
                 $report['km_price']= null;
             } else {
                 $report['daily_price']= $rental->daily_rate * $daily;
-                if (($dropoff->current_km - $rental->current_km) > 1000) {
+                if (($dropoff->current_km - $rental->current_km) > $settings->base_km) {
                     $report['km_price']= (($dropoff->current_km - $rental->current_km) * $category->extra_km_price);
                 }
             }

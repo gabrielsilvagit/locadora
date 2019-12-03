@@ -11,7 +11,6 @@ class CategoryService
         $category = Category::select("daily_rate", "free_daily_rate")
             ->where("id", $category)
             ->first();
-
         if ($free_km) {
             return $category->free_daily_rate;
         }
