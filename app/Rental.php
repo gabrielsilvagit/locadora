@@ -11,19 +11,21 @@ class Rental extends Model
         'current_km', 'fuel_level', 'free_km', 'vehicle_id', 'age_aditional'
     ];
 
+    protected $with = ['user', 'category', 'vehicle'];
+
     public function user()
     {
-        return $this->belongsTo("App\User", 'id', 'user_id');
+        return $this->belongsTo("App\User", 'user_id', 'id');
     }
 
     public function category()
     {
-        return $this->hasOne("App\Category", 'id', 'category_id');
+        return $this->belongsTo("App\Category", 'category_id', 'id');
     }
 
     public function vehicle()
     {
-        return $this->hasOne("App\Vehicle", 'id', 'vehicle_id');
+        return $this->belongsTo("App\Vehicle", 'vehicle_id', 'id');
     }
 
     public function dropoff()

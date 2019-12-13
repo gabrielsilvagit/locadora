@@ -10,6 +10,8 @@ class CarModel extends Model
         'name', 'brand_id'
     ];
 
+    protected $with = ['brand'];
+
     public function vehicle()
     {
         return $this->hasMany("App\Vehicle");
@@ -17,6 +19,6 @@ class CarModel extends Model
 
     public function brand()
     {
-        return $this->belongsTo("App\Brand", 'id', 'brand_id');
+        return $this->belongsTo("App\Brand", 'brand_id', 'id');
     }
 }

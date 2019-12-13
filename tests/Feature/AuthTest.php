@@ -47,6 +47,22 @@ class AuthTest extends TestCase
             ->assertStatus(400);
     }
 
+    /** @test */
+    public function user_can_logout()
+    {
+        $user = factory(User::class)->create([
+            'password' => bcrypt('password')
+        ]);
+        $form = $this->form($user);
+        $form['password'] = 'password';
+        $this->json('POST', 'api/login', $form)
+            ->assertStatus(200);
+        $this->assertAuthenticated();
+        $this->json('POST', 'api/logout', $form)
+            ->assertStatus(200);
+        $this->assertGuest();
+    }
+
     private function form($data)
     {
         $form['email'] = $data->email;

@@ -11,6 +11,10 @@ class Vehicle extends Model
         'plate', 'chassi', 'carmodel_id', 'model_year', 'make_year', 'fuel_id', 'category_id',
     ];
 
+    protected $with = [
+        'carmodel', 'fuel', 'category',
+    ];
+
     public function rental()
     {
         return $this->hasMany("App\Rental");
@@ -18,17 +22,17 @@ class Vehicle extends Model
 
     public function carmodel()
     {
-        return $this->belongsTo("App\CarModel", 'id', 'carmodel_id');
+        return $this->belongsTo("App\CarModel", 'carmodel_id', 'id');
     }
 
     public function fuel()
     {
-        return $this->belongsTo("App\Fuel", 'id', 'fuel_id');
+        return $this->belongsTo("App\Fuel", 'fuel_id', 'id');
     }
 
     public function category()
     {
-        return $this->belongsTo("App\Category", 'id', 'category_id');
+        return $this->belongsTo("App\Category", 'category_id', 'id');
     }
 
     // public function getRentedAttribute(AvailabilityService $service)

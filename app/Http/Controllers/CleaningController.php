@@ -6,7 +6,6 @@ use App\Rental;
 use App\Vehicle;
 use Carbon\Carbon;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CleaningRequest;
 
@@ -17,6 +16,7 @@ class CleaningController extends Controller
     public function index()
     {
         $cleanings = Rental::where('type', 'cleaning')->get();
+
         return $this->successResponse($cleanings, 200);
     }
 
@@ -29,11 +29,12 @@ class CleaningController extends Controller
             'type' => 'cleaning',
             'start_date' => $request->start_date,
             'end_date' => $end_date,
-            'category_id' => $request->category_id,
+            'category_id' => $vehicle->category_id,
             'notes' => $request->notes,
             'vehicle_id' => $vehicle->id,
         ];
         $cleaning = Rental::create($data);
+
         return $this->successResponse($cleaning, 201);
     }
 
@@ -51,17 +52,19 @@ class CleaningController extends Controller
             'type' => 'cleaning',
             'start_date' => $request->start_date,
             'end_date' => $end_date,
-            'category_id' => $request->category_id,
+            'category_id' => $vehicle->category_id,
             'notes' => $request->notes,
             'vehicle_id' => $vehicle->id,
         ];
         $cleaning->update($data);
+
         return $this->successResponse($cleaning, 201);
     }
 
     public function destroy(Rental $cleaning)
     {
         $cleaning->delete();
+
         return $this->successResponse($cleaning, 200);
     }
 }

@@ -24,7 +24,6 @@ class MaintenanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'required|exists:categories,id',
             'start_date' => 'required|date',
             'notes' => 'string',
             'plate' => 'required|exists:vehicles,plate'

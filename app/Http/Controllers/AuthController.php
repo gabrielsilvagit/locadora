@@ -23,4 +23,11 @@ class AuthController extends Controller
 
         return $this->errorResponse('Incorrect Credentials', 400);
     }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return $this->successResponse('Logout');
+    }
 }

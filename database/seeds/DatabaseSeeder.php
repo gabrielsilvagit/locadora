@@ -1,5 +1,8 @@
 <?php
 
+use App\Rental;
+use App\Setting;
+use App\Vehicle;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        factory(Setting::class, 15)->create();
+        factory(Vehicle::class, 15)->create();
+        factory(Rental::class, 15)->states('forCreate')->create();
     }
 }

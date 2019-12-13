@@ -19,6 +19,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', 'AuthController@logout')->name('logout');
+
     Route::get('/users', 'UserController@index');
     Route::get('/users/{user}', 'UserController@show');
     Route::put('/users/{user}', 'UserController@update');
